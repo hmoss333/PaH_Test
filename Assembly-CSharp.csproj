@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{3AA56906-4B79-8BCB-981D-C9B2C09078D4}</ProjectGuid>
+    <ProjectGuid>{B774876E-EC7A-D736-0E6E-35E0C67DBAB8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -49,6 +49,18 @@
      <Compile Include="Assets\Scripts\EventGenerator.cs" />
      <Compile Include="Assets\Scripts\EventMove.cs" />
      <Compile Include="Assets\Scripts\EventObject.cs" />
+     <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\IntVector2.cs" />
+     <Compile Include="Assets\Scripts\Maze.cs" />
+     <Compile Include="Assets\Scripts\MazeCell.cs" />
+     <Compile Include="Assets\Scripts\MazeCellEdge.cs" />
+     <Compile Include="Assets\Scripts\MazeDirection.cs" />
+     <Compile Include="Assets\Scripts\MazeDoor.cs" />
+     <Compile Include="Assets\Scripts\MazePassage.cs" />
+     <Compile Include="Assets\Scripts\MazeRoom.cs" />
+     <Compile Include="Assets\Scripts\MazeRoomSettings.cs" />
+     <Compile Include="Assets\Scripts\MazeWall.cs" />
+     <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\PlayerCharacter.cs" />
      <Compile Include="Assets\Test\PerlinNoise.cs" />
  <Reference Include="UnityEngine.UI">
