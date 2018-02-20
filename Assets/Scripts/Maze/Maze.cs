@@ -7,7 +7,7 @@ public class Maze : MonoBehaviour {
 	public IntVector2 size;
 
 	public MazeCell cellPrefab;
-    public float cellScale = 10f;
+    public float cellScale;
 
 	public float generationStepDelay;
 
@@ -32,6 +32,9 @@ public class Maze : MonoBehaviour {
 		}
 	}
 
+    public GameObject[] interactObject;
+    public int numOfInteracts;
+
 	public bool ContainsCoordinates (IntVector2 coordinate) {
 		return coordinate.x >= 0 && coordinate.x < size.x && coordinate.z >= 0 && coordinate.z < size.z;
 	}
@@ -49,10 +52,10 @@ public class Maze : MonoBehaviour {
 			yield return delay;
 			DoNextGenerationStep(activeCells);
 		}
-        for (int i = 0; i < rooms.Count; i++)
-        {
-            rooms[i].Hide();
-        }
+        //for (int i = 0; i < rooms.Count; i++)
+        //{
+        //    rooms[i].Hide();
+        //}
     }
 
 	private void DoFirstGenerationStep (List<MazeCell> activeCells) {
@@ -97,6 +100,20 @@ public class Maze : MonoBehaviour {
 		newCell.transform.parent = transform;
         //newCell.transform.localPosition = new Vector3(coordinates.x - size.x * 0.5f + 0.5f, 0f, coordinates.z - size.z * 0.5f + 0.5f); //original line
         newCell.transform.localPosition = new Vector3(coordinates.x * cellScale, 0f, coordinates.z * cellScale); //new line
+
+        GameObject iObject;
+        //Vector3 randPos;
+
+        for (int i = 0; i < numOfInteracts; i++)
+        {
+            //randPos = new Vector3(Random.Range(-newCell.transform.localPosition.x/2, newCell.transform.localPosition.x/2), 0, Random.Range(-newCell.transform.localPosition.z / 2, newCell.transform.localPosition.z / 2));
+            iObject = Instantiate(interactObject[Random.Range(0, interactObject.Length)]);
+            iObject.transform.parent = newCell.transform;
+            float radius = iObject.GetComponent<SphereCollider>().radius;
+            iObject.transform.localPosition = new Vector3(Random.Range(-(float)newCell.coordinates.x / (cellScale * 3f) + radius, (float)newCell.coordinates.x / (cellScale * 3f) - radius), 0, Random.Range(-(float)newCell.coordinates.z / (cellScale * 3f) + radius, (float)newCell.coordinates.z / (cellScale * 3f) - radius));
+            Debug.Log(iObject.transform.localPosition.ToString());
+        }
+
         return newCell;
 	}
 
