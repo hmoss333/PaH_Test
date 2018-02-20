@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Maze\DoorTrigger.cs" />
      <Compile Include="Assets\Scripts\Maze\EventGenerator.cs" />
      <Compile Include="Assets\Scripts\Maze\EventMove.cs" />
      <Compile Include="Assets\Scripts\Maze\EventObject.cs" />

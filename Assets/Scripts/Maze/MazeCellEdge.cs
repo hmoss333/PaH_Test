@@ -12,7 +12,27 @@ public abstract class MazeCellEdge : MonoBehaviour {
 		this.direction = direction;
 		cell.SetEdge(direction, this);
 		transform.parent = cell.transform;
-		transform.localPosition = Vector3.zero;
+        //transform.localPosition = Vector3.zero;
+
+        switch (direction)
+        {
+            case MazeDirection.East:
+                transform.localPosition = new Vector3(0.4f, 0, 0);
+                break;
+            case MazeDirection.West:
+                transform.localPosition = new Vector3(-0.4f, 0, 0);
+                break;
+            case MazeDirection.North:
+                transform.localPosition = new Vector3(0, 0, 0.4f);
+                break;
+            case MazeDirection.South:
+                transform.localPosition = new Vector3(0, 0, -0.4f);
+                break;
+            default:
+                transform.localPosition = Vector3.zero;
+                break;
+        }
+
 		transform.localRotation = direction.ToRotation();
 	}
 

@@ -46,11 +46,11 @@ public class MazeCell : MonoBehaviour {
 	}
 
 	public void Show () {
-		//gameObject.SetActive(true);
+		gameObject.SetActive(true);
 	}
 
 	public void Hide () {
-		//gameObject.SetActive(false);
+		gameObject.SetActive(false);
 	}
 
 	public void OnPlayerEntered () {
