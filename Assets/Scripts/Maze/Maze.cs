@@ -35,7 +35,8 @@ public class Maze : MonoBehaviour {
     public GameObject[] interactObject;
     public int numOfInteracts;
 
-	public bool ContainsCoordinates (IntVector2 coordinate) {
+
+    public bool ContainsCoordinates (IntVector2 coordinate) {
 		return coordinate.x >= 0 && coordinate.x < size.x && coordinate.z >= 0 && coordinate.z < size.z;
 	}
 
@@ -52,13 +53,13 @@ public class Maze : MonoBehaviour {
 			yield return delay;
 			DoNextGenerationStep(activeCells);
 		}
-        //for (int i = 0; i < rooms.Count; i++)
-        //{
-        //    rooms[i].Hide();
-        //}
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            rooms[i].Hide();
+        }
     }
 
-	private void DoFirstGenerationStep (List<MazeCell> activeCells) {
+    private void DoFirstGenerationStep (List<MazeCell> activeCells) {
 		MazeCell newCell = CreateCell(RandomCoordinates);
 		newCell.Initialize(CreateRoom(-1));
 		activeCells.Add(newCell);
@@ -94,6 +95,7 @@ public class Maze : MonoBehaviour {
 
 	private MazeCell CreateCell (IntVector2 coordinates) {
 		MazeCell newCell = Instantiate(cellPrefab) as MazeCell;
+        ScaleObject(newCell.gameObject, cellScale, 1, cellScale);
 		cells[coordinates.x, coordinates.z] = newCell;
 		newCell.coordinates = coordinates;
 		newCell.name = "Maze Cell " + coordinates.x + ", " + coordinates.z;
@@ -106,12 +108,10 @@ public class Maze : MonoBehaviour {
 
         for (int i = 0; i < numOfInteracts; i++)
         {
-            //randPos = new Vector3(Random.Range(-newCell.transform.localPosition.x/2, newCell.transform.localPosition.x/2), 0, Random.Range(-newCell.transform.localPosition.z / 2, newCell.transform.localPosition.z / 2));
             iObject = Instantiate(interactObject[Random.Range(0, interactObject.Length)]);
             iObject.transform.parent = newCell.transform;
             float radius = iObject.GetComponent<SphereCollider>().radius;
-            iObject.transform.localPosition = new Vector3(Random.Range(-(float)newCell.coordinates.x / (cellScale * 3f) + radius, (float)newCell.coordinates.x / (cellScale * 3f) - radius), 0, Random.Range(-(float)newCell.coordinates.z / (cellScale * 3f) + radius, (float)newCell.coordinates.z / (cellScale * 3f) - radius));
-            Debug.Log(iObject.transform.localPosition.ToString());
+            iObject.transform.position = new Vector3(Random.Range(newCell.transform.position.x - (cellScale/2) + radius, newCell.transform.localPosition.x + (cellScale / 2) - radius), 0, Random.Range(newCell.transform.localPosition.z - (cellScale / 2) + radius, newCell.transform.localPosition.z + (cellScale / 2) - radius));
         }
 
         return newCell;
@@ -119,15 +119,20 @@ public class Maze : MonoBehaviour {
 
 	private void CreatePassage (MazeCell cell, MazeCell otherCell, MazeDirection direction) {
 		MazePassage prefab = Random.value < doorProbability ? doorPrefab : passagePrefab;
+        if (prefab == doorPrefab)
+            ScaleObject(prefab.gameObject, cellScale, 1, 1);
+
 		MazePassage passage = Instantiate(prefab) as MazePassage;
 		passage.Initialize(cell, otherCell, direction);
 		passage = Instantiate(prefab) as MazePassage;
+
 		if (passage is MazeDoor) {
 			otherCell.Initialize(CreateRoom(cell.room.settingsIndex));
 		}
 		else {
 			otherCell.Initialize(cell.room);
 		}
+
 		passage.Initialize(otherCell, cell, direction.GetOpposite());
 	}
 
@@ -146,10 +151,12 @@ public class Maze : MonoBehaviour {
 
 	private void CreateWall (MazeCell cell, MazeCell otherCell, MazeDirection direction) {
 		MazeWall wall = Instantiate(wallPrefabs[Random.Range(0, wallPrefabs.Length)]) as MazeWall;
-		wall.Initialize(cell, otherCell, direction);
+        ScaleObject(wall.gameObject, cellScale, 1, 1);
+        wall.Initialize(cell, otherCell, direction);
 		if (otherCell != null) {
 			wall = Instantiate(wallPrefabs[Random.Range(0, wallPrefabs.Length)]) as MazeWall;
-			wall.Initialize(otherCell, cell, direction.GetOpposite());
+            ScaleObject(wall.gameObject, cellScale, 1, 1);
+            wall.Initialize(otherCell, cell, direction.GetOpposite());
 		}
 	}
 
@@ -163,4 +170,9 @@ public class Maze : MonoBehaviour {
 		rooms.Add(newRoom);
 		return newRoom;
 	}
+
+    void ScaleObject (GameObject targetObject, float x, float y, float z)
+    {
+        targetObject.transform.localScale = new Vector3(x, y, z);
+    }
 }
