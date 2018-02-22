@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
-	public Maze mazePrefab;
+	public Maze[] mazePrefabs;
 
 	public Player playerPrefab;
 
@@ -12,33 +13,44 @@ public class GameManager : MonoBehaviour {
 	private Player playerInstance;
 
 	private void Start () {
-		StartCoroutine(BeginGame());
+        SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Additive);
+        StartCoroutine(BeginGame());
 	}
 	
 	private void Update () {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            RestartGame();
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    RestartGame();
+        //}
     }
 
 	private IEnumerator BeginGame () {
-		//Camera.main.clearFlags = CameraClearFlags.Skybox;
-		//Camera.main.rect = new Rect(0f, 0f, 1f, 1f);
-		mazeInstance = Instantiate(mazePrefab) as Maze;
+        //Camera.main.clearFlags = CameraClearFlags.Skybox;
+        //Camera.main.rect = new Rect(0f, 0f, 1f, 1f);
+        mazeInstance = Instantiate(PickMaze(mazePrefabs)) as Maze; //Instantiate(mazePrefabs) as Maze;
 		yield return StartCoroutine(mazeInstance.Generate());
 		playerInstance = Instantiate(playerPrefab) as Player;
 		playerInstance.SetLocation(mazeInstance.GetCell(mazeInstance.RandomCoordinates));
-		//Camera.main.clearFlags = CameraClearFlags.Depth;
-		//Camera.main.rect = new Rect(0f, 0f, 0.5f, 0.5f);
+        //Camera.main.clearFlags = CameraClearFlags.Depth;
+        //Camera.main.rect = new Rect(0f, 0f, 0.5f, 0.5f);
+        SceneManager.UnloadSceneAsync("Loading");
 	}
 
-	private void RestartGame () {
+	public void RestartGame () {
 		StopAllCoroutines();
+        SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Additive);
 		Destroy(mazeInstance.gameObject);
 		if (playerInstance != null) {
 			Destroy(playerInstance.gameObject);
 		}
 		StartCoroutine(BeginGame());
 	}
+
+    private Maze PickMaze (Maze[] mazes)
+    {
+        int randNum = Random.Range(0, mazes.Length);
+        Maze pickedMaze = mazes[randNum];
+
+        return pickedMaze;
+    }
 }

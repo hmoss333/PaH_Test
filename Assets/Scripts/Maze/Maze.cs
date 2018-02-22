@@ -33,7 +33,11 @@ public class Maze : MonoBehaviour {
 	}
 
     public GameObject[] interactObject;
-    public int numOfInteracts;
+    public int numOfInteracts; //per cell
+    [Range(0f, 1f)]
+    public float interactProbability;
+
+    public MazeExit exitPrefab;
 
 
     public bool ContainsCoordinates (IntVector2 coordinate) {
@@ -95,7 +99,7 @@ public class Maze : MonoBehaviour {
 
 	private MazeCell CreateCell (IntVector2 coordinates) {
 		MazeCell newCell = Instantiate(cellPrefab) as MazeCell;
-        ScaleObject(newCell.gameObject, cellScale, 1, cellScale);
+        ScaleObject(newCell.gameObject, cellScale, cellScale);
 		cells[coordinates.x, coordinates.z] = newCell;
 		newCell.coordinates = coordinates;
 		newCell.name = "Maze Cell " + coordinates.x + ", " + coordinates.z;
@@ -104,14 +108,27 @@ public class Maze : MonoBehaviour {
         newCell.transform.localPosition = new Vector3(coordinates.x * cellScale, 0f, coordinates.z * cellScale); //new line
 
         GameObject iObject;
-        //Vector3 randPos;
-
         for (int i = 0; i < numOfInteracts; i++)
         {
-            iObject = Instantiate(interactObject[Random.Range(0, interactObject.Length)]);
-            iObject.transform.parent = newCell.transform;
-            float radius = iObject.GetComponent<SphereCollider>().radius;
-            iObject.transform.position = new Vector3(Random.Range(newCell.transform.position.x - (cellScale/2) + radius, newCell.transform.localPosition.x + (cellScale / 2) - radius), 0, Random.Range(newCell.transform.localPosition.z - (cellScale / 2) + radius, newCell.transform.localPosition.z + (cellScale / 2) - radius));
+            if (Random.value < interactProbability)
+            {
+                if (GameObject.FindObjectOfType<MazeExit>())
+                {
+                    iObject = Instantiate(interactObject[Random.Range(0, interactObject.Length)]);
+                    iObject.transform.parent = newCell.transform;
+                    float radius = iObject.GetComponent<SphereCollider>().radius;
+                    iObject.transform.position = new Vector3(
+                        Random.Range(newCell.transform.position.x - (cellScale / 2) + radius, newCell.transform.localPosition.x + (cellScale / 2) - radius), 
+                        0, 
+                        Random.Range(newCell.transform.localPosition.z - (cellScale / 2) + radius, newCell.transform.localPosition.z + (cellScale / 2) - radius));
+                }
+                else
+                {
+                    iObject = Instantiate(exitPrefab.gameObject);
+                    iObject.transform.parent = newCell.transform;
+                    iObject.transform.position = newCell.transform.position;
+                }
+            }
         }
 
         return newCell;
@@ -120,7 +137,7 @@ public class Maze : MonoBehaviour {
 	private void CreatePassage (MazeCell cell, MazeCell otherCell, MazeDirection direction) {
 		MazePassage prefab = Random.value < doorProbability ? doorPrefab : passagePrefab;
         if (prefab == doorPrefab)
-            ScaleObject(prefab.gameObject, cellScale, 1, 1);
+            ScaleObject(prefab.gameObject, cellScale, 1);
 
 		MazePassage passage = Instantiate(prefab) as MazePassage;
 		passage.Initialize(cell, otherCell, direction);
@@ -151,11 +168,11 @@ public class Maze : MonoBehaviour {
 
 	private void CreateWall (MazeCell cell, MazeCell otherCell, MazeDirection direction) {
 		MazeWall wall = Instantiate(wallPrefabs[Random.Range(0, wallPrefabs.Length)]) as MazeWall;
-        ScaleObject(wall.gameObject, cellScale, 1, 1);
+        ScaleObject(wall.gameObject, cellScale, 1);
         wall.Initialize(cell, otherCell, direction);
 		if (otherCell != null) {
 			wall = Instantiate(wallPrefabs[Random.Range(0, wallPrefabs.Length)]) as MazeWall;
-            ScaleObject(wall.gameObject, cellScale, 1, 1);
+            ScaleObject(wall.gameObject, cellScale, 1);
             wall.Initialize(otherCell, cell, direction.GetOpposite());
 		}
 	}
@@ -171,8 +188,8 @@ public class Maze : MonoBehaviour {
 		return newRoom;
 	}
 
-    void ScaleObject (GameObject targetObject, float x, float y, float z)
+    void ScaleObject (GameObject targetObject, float x, float z)
     {
-        targetObject.transform.localScale = new Vector3(x, y, z);
+        targetObject.transform.localScale = new Vector3(x, 1, z);
     }
 }

@@ -57,6 +57,7 @@
      <Compile Include="Assets\Scripts\Maze\MazeCellEdge.cs" />
      <Compile Include="Assets\Scripts\Maze\MazeDirection.cs" />
      <Compile Include="Assets\Scripts\Maze\MazeDoor.cs" />
+     <Compile Include="Assets\Scripts\Maze\MazeExit.cs" />
      <Compile Include="Assets\Scripts\Maze\MazePassage.cs" />
      <Compile Include="Assets\Scripts\Maze\MazeRoom.cs" />
      <Compile Include="Assets\Scripts\Maze\MazeRoomSettings.cs" />
