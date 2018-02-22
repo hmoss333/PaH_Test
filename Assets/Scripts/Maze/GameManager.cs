@@ -14,14 +14,12 @@ public class GameManager : MonoBehaviour {
 
 	private void Start () {
         SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Additive);
+        PlayerPrefs.SetInt("itemCount", 0);
         StartCoroutine(BeginGame());
 	}
 	
 	private void Update () {
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    RestartGame();
-        //}
+        
     }
 
 	private IEnumerator BeginGame () {

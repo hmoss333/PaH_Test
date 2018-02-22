@@ -8,32 +8,50 @@ public class Player : MonoBehaviour {
 
     public float speed;
     public float checkDist;
-    bool interacting;
+    //bool interacting;
+    public int itemCount;
 
     float xInput;
     float yInput;
 
     Vector3 dir;
     Rigidbody rb;
-    [HideInInspector]
     public enum LastInput { up, left, right, down };
     public LastInput lastInput;
 
     Vector3 previousGood = Vector3.zero;
-    RaycastHit2D foundHit;
+    RaycastHit foundHit;
 
     // Use this for initialization
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
-        interacting = false;
+        //interacting = false;
+        itemCount = PlayerPrefs.GetInt("itemCount");
+    }
+
+    private void Update()
+    {
+        if (Input.GetButtonDown("Jump"))
+        {
+            foundHit = new RaycastHit();
+            bool test = Physics.Raycast(transform.position, dir, out foundHit, checkDist, 1 << LayerMask.NameToLayer("Wall"));
+            Debug.DrawRay(transform.position, dir, Color.green);
+
+            if (test)//foundHit.collider != null)
+            {
+                Debug.Log("Looking at a thing: " + foundHit.transform.name);
+                foundHit.transform.GetComponent<InteractObject>().Interact();
+                //interacting = true;
+            }
+        }
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!interacting)
-        {
+        //if (!interacting)
+        //{
             xInput = Input.GetAxisRaw("Horizontal");
             yInput = Input.GetAxisRaw("Vertical");
 
@@ -76,20 +94,7 @@ public class Player : MonoBehaviour {
             {
                 previousGood = dir;
             }
-
-            if (Input.GetButtonDown("Jump"))
-            {
-                foundHit = Physics2D.Raycast(transform.position, dir, checkDist, 1 << LayerMask.NameToLayer("Wall"));
-                Debug.DrawRay(transform.position, dir, Color.green);
-
-                if (foundHit.collider != null)
-                {
-                    Debug.Log("Looking at a thing: " + foundHit.transform.name);
-                    //foundHit.collider.gameObject.GetComponent<Object_Interact_Parent>().Interact();
-                    interacting = true;
-                }
-            }
-        }
+        //}
     }
 
     public void SetLocation(MazeCell cell)
