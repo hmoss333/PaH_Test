@@ -57,10 +57,10 @@ public class Maze : MonoBehaviour {
 			yield return delay;
 			DoNextGenerationStep(activeCells);
 		}
-        for (int i = 0; i < rooms.Count; i++)
-        {
-            rooms[i].Hide();
-        }
+        //for (int i = 0; i < rooms.Count; i++)
+        //{
+        //    rooms[i].Hide();
+        //}
     }
 
     private void DoFirstGenerationStep (List<MazeCell> activeCells) {
@@ -168,7 +168,7 @@ public class Maze : MonoBehaviour {
 
 	private void CreateWall (MazeCell cell, MazeCell otherCell, MazeDirection direction) {
 		MazeWall wall = Instantiate(wallPrefabs[Random.Range(0, wallPrefabs.Length)]) as MazeWall;
-        ScaleObject(wall.gameObject, cellScale, 1);
+        ScaleObject(wall.gameObject, cellScale, 1);// cellScale/2f);
         wall.Initialize(cell, otherCell, direction);
 		if (otherCell != null) {
 			wall = Instantiate(wallPrefabs[Random.Range(0, wallPrefabs.Length)]) as MazeWall;
