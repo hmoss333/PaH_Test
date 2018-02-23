@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InteractParent : MonoBehaviour {
 
-    public Player player;
+    [HideInInspector] public Player player;
 
     // Use this for initialization
     void Start () {
@@ -19,6 +19,6 @@ public class InteractParent : MonoBehaviour {
 
     public virtual void Interact ()
     {
-
+        Debug.Log("Interacting with " + gameObject.name);
     }
 }

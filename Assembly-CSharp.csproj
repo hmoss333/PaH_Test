@@ -53,9 +53,12 @@
      <Compile Include="Assets\Scripts\Maze\EventObject.cs" />
      <Compile Include="Assets\Scripts\Maze\GameManager.cs" />
      <Compile Include="Assets\Scripts\Maze\IntVector2.cs" />
+     <Compile Include="Assets\Scripts\Maze\Interacts\InteractBarrier.cs" />
      <Compile Include="Assets\Scripts\Maze\Interacts\InteractDoor.cs" />
      <Compile Include="Assets\Scripts\Maze\Interacts\InteractObject.cs" />
      <Compile Include="Assets\Scripts\Maze\Interacts\InteractParent.cs" />
+     <Compile Include="Assets\Scripts\Maze\Interacts\InteractRubble.cs" />
+     <Compile Include="Assets\Scripts\Maze\Interacts\InteractVines.cs" />
      <Compile Include="Assets\Scripts\Maze\Maze.cs" />
      <Compile Include="Assets\Scripts\Maze\MazeCell.cs" />
      <Compile Include="Assets\Scripts\Maze\MazeCellEdge.cs" />

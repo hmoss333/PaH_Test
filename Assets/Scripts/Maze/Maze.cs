@@ -164,11 +164,18 @@ public class Maze : MonoBehaviour {
     private void CreateInteracts(MazeCell currentCell)
     {
         GameObject iObject;
-        for (int i = 0; i < numOfInteracts; i++)
+
+        if (!GameObject.FindObjectOfType<MazeExit>())
         {
-            if (Random.value < interactProbability)
+            iObject = Instantiate(exitPrefab.gameObject);
+            iObject.transform.parent = currentCell.transform;
+            iObject.transform.position = currentCell.transform.position;
+        }
+        else
+        {
+            for (int i = 0; i < numOfInteracts; i++)
             {
-                if (GameObject.FindObjectOfType<MazeExit>())
+                if (Random.value < interactProbability)
                 {
                     iObject = Instantiate(interactObject[Random.Range(0, interactObject.Length)]);
                     iObject.transform.parent = currentCell.transform;
@@ -177,12 +184,6 @@ public class Maze : MonoBehaviour {
                         Random.Range(currentCell.transform.position.x - (cellScale / 2) + radius, currentCell.transform.localPosition.x + (cellScale / 2) - radius),
                         0,
                         Random.Range(currentCell.transform.localPosition.z - (cellScale / 2) + radius, currentCell.transform.localPosition.z + (cellScale / 2) - radius));
-                }
-                else
-                {
-                    iObject = Instantiate(exitPrefab.gameObject);
-                    iObject.transform.parent = currentCell.transform;
-                    iObject.transform.position = currentCell.transform.position;
                 }
             }
         }
