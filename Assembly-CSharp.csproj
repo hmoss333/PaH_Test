@@ -48,6 +48,8 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\FadeEffect.cs" />
      <Compile Include="Assets\Scripts\Maze\DoorTrigger.cs" />
+     <Compile Include="Assets\Scripts\Maze\Enemies\EnemyFollow.cs" />
+     <Compile Include="Assets\Scripts\Maze\Enemies\EnemyParent.cs" />
      <Compile Include="Assets\Scripts\Maze\EventGenerator.cs" />
      <Compile Include="Assets\Scripts\Maze\EventMove.cs" />
      <Compile Include="Assets\Scripts\Maze\EventObject.cs" />
@@ -73,6 +75,8 @@
      <Compile Include="Assets\Scripts\PlayerCharacter.cs" />
      <Compile Include="Assets\Scripts\SceneFader.cs" />
      <Compile Include="Assets\Test\PerlinNoise.cs" />
+     <None Include="Assets\Imports\Props\Info.txt" />
+     <None Include="Assets\Imports\Ben3d Crate\Read me.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity 5.6.1/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

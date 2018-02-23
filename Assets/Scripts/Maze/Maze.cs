@@ -32,10 +32,15 @@ public class Maze : MonoBehaviour {
 		}
 	}
 
-    public GameObject[] interactObject;
-    public int numOfInteracts; //per cell
+    public InteractParent[] objectTypes;
+    public int numOfObjects; //per cell
     [Range(0f, 1f)]
-    public float interactProbability;
+    public float objectProbability;
+
+    public EnemyParent[] enemyTypes;
+    public int numOfEnemies; //per cell
+    [Range(0f, 1f)]
+    public float enemyProbability;
 
     public MazeExit exitPrefab;
 
@@ -75,6 +80,7 @@ public class Maze : MonoBehaviour {
 		if (currentCell.IsFullyInitialized) {
             ScaleObject(activeCells[currentIndex].gameObject, cellScale, cellScale);
             CreateInteracts(currentCell);
+            CreateEnemies(currentCell);
             activeCells.RemoveAt(currentIndex);
 			return;
 		}
@@ -173,11 +179,11 @@ public class Maze : MonoBehaviour {
         }
         else
         {
-            for (int i = 0; i < numOfInteracts; i++)
+            for (int i = 0; i < numOfObjects; i++)
             {
-                if (Random.value < interactProbability)
+                if (Random.value < objectProbability)
                 {
-                    iObject = Instantiate(interactObject[Random.Range(0, interactObject.Length)]);
+                    iObject = Instantiate(objectTypes[Random.Range(0, objectTypes.Length)].gameObject);
                     iObject.transform.parent = currentCell.transform;
                     float radius = iObject.GetComponent<SphereCollider>().radius;
                     iObject.transform.position = new Vector3(
@@ -185,6 +191,25 @@ public class Maze : MonoBehaviour {
                         0,
                         Random.Range(currentCell.transform.localPosition.z - (cellScale / 2) + radius, currentCell.transform.localPosition.z + (cellScale / 2) - radius));
                 }
+            }
+        }
+    }
+
+    private void CreateEnemies(MazeCell currentCell)
+    {
+        EnemyParent enemy;
+
+        for (int i = 0; i < numOfEnemies; i++)
+        {
+            if (Random.value < enemyProbability)
+            {
+                enemy = Instantiate(enemyTypes[Random.Range(0, objectTypes.Length)]);
+                enemy.transform.parent = currentCell.transform;
+                float radius = enemy.GetComponent<CapsuleCollider>().radius;
+                enemy.transform.position = new Vector3(
+                    Random.Range(currentCell.transform.position.x - (cellScale / 2) + radius, currentCell.transform.localPosition.x + (cellScale / 2) - radius),
+                    0.5f,
+                    Random.Range(currentCell.transform.localPosition.z - (cellScale / 2) + radius, currentCell.transform.localPosition.z + (cellScale / 2) - radius));
             }
         }
     }
