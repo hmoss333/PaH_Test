@@ -12,37 +12,9 @@ public abstract class MazeCellEdge : MonoBehaviour {
 		this.direction = direction;
 		cell.SetEdge(direction, this);
 		transform.parent = cell.transform;
-        //transform.localPosition = Vector3.zero;
+        transform.localPosition = Vector3.zero;
 
-        Maze maze = GameObject.FindObjectOfType<Maze>();
-        float scale = maze.cellScale;
-
-        //still not scaling perfectly
-        float xDist = (scale + ((float)maze.size.x - scale) / (maze.size.x * scale)) / maze.size.x;
-        float zDist = (scale + ((float)maze.size.z - scale) / (maze.size.z * scale)) / maze.size.z;
-        Debug.Log("xDist: " + xDist);
-        Debug.Log("zDist: " + zDist);
-
-        switch (direction)
-        {
-            case MazeDirection.East:
-                transform.localPosition = new Vector3(xDist, 0, 0);
-                break;
-            case MazeDirection.West:
-                transform.localPosition = new Vector3(-xDist, 0, 0);
-                break;
-            case MazeDirection.North:
-                transform.localPosition = new Vector3(0, 0, zDist);
-                break;
-            case MazeDirection.South:
-                transform.localPosition = new Vector3(0, 0, -zDist);
-                break;
-            default:
-                transform.localPosition = Vector3.zero;
-                break;
-        }
-
-		transform.localRotation = direction.ToRotation();
+        transform.localRotation = direction.ToRotation();
 	}
 
 	public virtual void OnPlayerEntered () {}

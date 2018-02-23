@@ -21,7 +21,7 @@ public class DoorTrigger : MonoBehaviour {
         if (other.tag == "Player")
         {
             mazeDoor.OnPlayerEntered();
-            Debug.Log("entered new room");
+            //Debug.Log("entered new room");
         }
     }
 
@@ -30,7 +30,7 @@ public class DoorTrigger : MonoBehaviour {
         if (other.tag == "Player")
         {
             //mazeDoor.OnPlayerExited();
-            Debug.Log("left old room");
+            //Debug.Log("left old room");
         }
     }
 }

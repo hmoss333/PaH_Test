@@ -41,7 +41,7 @@ public class Player : MonoBehaviour {
             if (test)//foundHit.collider != null)
             {
                 Debug.Log("Looking at a thing: " + foundHit.transform.name);
-                foundHit.transform.GetComponent<InteractObject>().Interact();
+                foundHit.transform.GetComponent<InteractParent>().Interact();
                 //interacting = true;
             }
         }

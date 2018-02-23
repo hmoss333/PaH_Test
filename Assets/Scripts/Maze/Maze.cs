@@ -57,23 +57,25 @@ public class Maze : MonoBehaviour {
 			yield return delay;
 			DoNextGenerationStep(activeCells);
 		}
-        //for (int i = 0; i < rooms.Count; i++)
-        //{
-        //    rooms[i].Hide();
-        //}
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            rooms[i].Hide();
+        }
     }
 
     private void DoFirstGenerationStep (List<MazeCell> activeCells) {
 		MazeCell newCell = CreateCell(RandomCoordinates);
 		newCell.Initialize(CreateRoom(-1));
-		activeCells.Add(newCell);
+        activeCells.Add(newCell);
 	}
 
 	private void DoNextGenerationStep (List<MazeCell> activeCells) {
         int currentIndex = activeCells.Count - 1;
 		MazeCell currentCell = activeCells[currentIndex];
 		if (currentCell.IsFullyInitialized) {
-			activeCells.RemoveAt(currentIndex);
+            ScaleObject(activeCells[currentIndex].gameObject, cellScale, cellScale);
+            CreateInteracts(currentCell);
+            activeCells.RemoveAt(currentIndex);
 			return;
 		}
 		MazeDirection direction = currentCell.RandomUninitializedDirection;
@@ -99,7 +101,6 @@ public class Maze : MonoBehaviour {
 
 	private MazeCell CreateCell (IntVector2 coordinates) {
 		MazeCell newCell = Instantiate(cellPrefab) as MazeCell;
-        ScaleObject(newCell.gameObject, cellScale, cellScale);
 		cells[coordinates.x, coordinates.z] = newCell;
 		newCell.coordinates = coordinates;
 		newCell.name = "Maze Cell " + coordinates.x + ", " + coordinates.z;
@@ -107,37 +108,11 @@ public class Maze : MonoBehaviour {
         //newCell.transform.localPosition = new Vector3(coordinates.x - size.x * 0.5f + 0.5f, 0f, coordinates.z - size.z * 0.5f + 0.5f); //original line
         newCell.transform.localPosition = new Vector3(coordinates.x * cellScale, 0f, coordinates.z * cellScale); //new line
 
-        GameObject iObject;
-        for (int i = 0; i < numOfInteracts; i++)
-        {
-            if (Random.value < interactProbability)
-            {
-                if (GameObject.FindObjectOfType<MazeExit>())
-                {
-                    iObject = Instantiate(interactObject[Random.Range(0, interactObject.Length)]);
-                    iObject.transform.parent = newCell.transform;
-                    float radius = iObject.GetComponent<SphereCollider>().radius;
-                    iObject.transform.position = new Vector3(
-                        Random.Range(newCell.transform.position.x - (cellScale / 2) + radius, newCell.transform.localPosition.x + (cellScale / 2) - radius), 
-                        0, 
-                        Random.Range(newCell.transform.localPosition.z - (cellScale / 2) + radius, newCell.transform.localPosition.z + (cellScale / 2) - radius));
-                }
-                else
-                {
-                    iObject = Instantiate(exitPrefab.gameObject);
-                    iObject.transform.parent = newCell.transform;
-                    iObject.transform.position = newCell.transform.position;
-                }
-            }
-        }
-
         return newCell;
 	}
 
 	private void CreatePassage (MazeCell cell, MazeCell otherCell, MazeDirection direction) {
 		MazePassage prefab = Random.value < doorProbability ? doorPrefab : passagePrefab;
-        if (prefab == doorPrefab)
-            ScaleObject(prefab.gameObject, cellScale, 1);
 
 		MazePassage passage = Instantiate(prefab) as MazePassage;
 		passage.Initialize(cell, otherCell, direction);
@@ -151,7 +126,7 @@ public class Maze : MonoBehaviour {
 		}
 
 		passage.Initialize(otherCell, cell, direction.GetOpposite());
-	}
+    }
 
 	private void CreatePassageInSameRoom (MazeCell cell, MazeCell otherCell, MazeDirection direction) {
 		MazePassage passage = Instantiate(passagePrefab) as MazePassage;
@@ -168,14 +143,12 @@ public class Maze : MonoBehaviour {
 
 	private void CreateWall (MazeCell cell, MazeCell otherCell, MazeDirection direction) {
 		MazeWall wall = Instantiate(wallPrefabs[Random.Range(0, wallPrefabs.Length)]) as MazeWall;
-        ScaleObject(wall.gameObject, cellScale, 1);// cellScale/2f);
         wall.Initialize(cell, otherCell, direction);
 		if (otherCell != null) {
 			wall = Instantiate(wallPrefabs[Random.Range(0, wallPrefabs.Length)]) as MazeWall;
-            ScaleObject(wall.gameObject, cellScale, 1);
             wall.Initialize(otherCell, cell, direction.GetOpposite());
 		}
-	}
+    }
 
 	private MazeRoom CreateRoom (int indexToExclude) {
 		MazeRoom newRoom = ScriptableObject.CreateInstance<MazeRoom>();
@@ -187,6 +160,33 @@ public class Maze : MonoBehaviour {
 		rooms.Add(newRoom);
 		return newRoom;
 	}
+
+    private void CreateInteracts(MazeCell currentCell)
+    {
+        GameObject iObject;
+        for (int i = 0; i < numOfInteracts; i++)
+        {
+            if (Random.value < interactProbability)
+            {
+                if (GameObject.FindObjectOfType<MazeExit>())
+                {
+                    iObject = Instantiate(interactObject[Random.Range(0, interactObject.Length)]);
+                    iObject.transform.parent = currentCell.transform;
+                    float radius = iObject.GetComponent<SphereCollider>().radius;
+                    iObject.transform.position = new Vector3(
+                        Random.Range(currentCell.transform.position.x - (cellScale / 2) + radius, currentCell.transform.localPosition.x + (cellScale / 2) - radius),
+                        0,
+                        Random.Range(currentCell.transform.localPosition.z - (cellScale / 2) + radius, currentCell.transform.localPosition.z + (cellScale / 2) - radius));
+                }
+                else
+                {
+                    iObject = Instantiate(exitPrefab.gameObject);
+                    iObject.transform.parent = currentCell.transform;
+                    iObject.transform.position = currentCell.transform.position;
+                }
+            }
+        }
+    }
 
     void ScaleObject (GameObject targetObject, float x, float z)
     {
