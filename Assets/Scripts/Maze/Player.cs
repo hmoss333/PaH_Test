@@ -8,16 +8,17 @@ public class Player : MonoBehaviour {
 
     public float speed;
     public float checkDist;
-    //bool interacting;
     public int itemCount;
 
     float xInput;
     float yInput;
 
+    float horizontal;
+    float vertical;
+    public float mouseSensitivity;
+
     Vector3 dir;
     Rigidbody rb;
-    public enum LastInput { up, left, right, down };
-    public LastInput lastInput;
 
     Vector3 previousGood = Vector3.zero;
     RaycastHit foundHit;
@@ -26,74 +27,45 @@ public class Player : MonoBehaviour {
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
-        //interacting = false;
         itemCount = PlayerPrefs.GetInt("itemCount");
     }
 
+    // Update is called once per frame
     private void Update()
     {
-        if (Input.GetButtonDown("Jump"))
+        UpdateRotation();
+
+        xInput = Input.GetAxisRaw("Horizontal");
+        yInput = Input.GetAxisRaw("Vertical");
+
+        dir = new Vector3(xInput, 0, yInput);
+        dir = transform.TransformDirection(dir);
+        dir *= speed;
+
+        rb.velocity = dir;
+
+
+        if (Input.GetMouseButtonDown(0))//.GetButtonDown("Jump"))
         {
             foundHit = new RaycastHit();
-            bool test = Physics.Raycast(transform.position, dir, out foundHit, checkDist, 1 << LayerMask.NameToLayer("Wall"));
-            Debug.DrawRay(transform.position, dir, Color.green);
+            bool test = Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out foundHit, checkDist, 1 << LayerMask.NameToLayer("Wall"));
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward), Color.green);
 
-            if (test)//foundHit.collider != null)
+            if (test)
             {
                 foundHit.transform.GetComponent<InteractParent>().Interact();
-                //interacting = true;
             }
         }
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    void UpdateRotation()
     {
-        //if (!interacting)
-        //{
-            xInput = Input.GetAxisRaw("Horizontal");
-            yInput = Input.GetAxisRaw("Vertical");
+        horizontal = Input.GetAxis("Mouse X") * mouseSensitivity;
+        vertical -= Input.GetAxis("Mouse Y") * mouseSensitivity;
+        vertical = Mathf.Clamp(vertical, -30, 30);
 
-            if (xInput != 0)
-            {
-                dir = new Vector3(xInput * speed, 0, 0);
-                if (xInput > 0)
-                {
-                    lastInput = LastInput.right;
-                }
-                else
-                {
-                    lastInput = LastInput.left;
-                }
-            }
-            else if (yInput != 0)
-            {
-                dir = new Vector3(0, 0, yInput * speed);
-                if (yInput > 0)
-                {
-                    lastInput = LastInput.up;
-                }
-                else
-                {
-                    lastInput = LastInput.down;
-                }
-            }
-            else
-            {
-                dir = new Vector3(0, 0, 0);
-            }
-
-            rb.velocity = dir;
-
-            if (dir == Vector3.zero)
-            {
-                dir = previousGood;
-            }
-            else
-            {
-                previousGood = dir;
-            }
-        //}
+        transform.Rotate(0, horizontal, 0);
+        Camera.main.transform.localRotation = Quaternion.Euler(vertical, 0, 0);
     }
 
     public void SetLocation(MazeCell cell)
@@ -103,7 +75,7 @@ public class Player : MonoBehaviour {
             currentCell.OnPlayerExited();
         }
         currentCell = cell;
-        transform.localPosition = cell.transform.localPosition;
+        transform.localPosition = new Vector3(cell.transform.localPosition.x, transform.position.y, cell.transform.localPosition.z);
         currentCell.OnPlayerEntered();
     }
 
