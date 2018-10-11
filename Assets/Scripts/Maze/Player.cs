@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class Player : MonoBehaviour {
 
-	private MazeCell currentCell;
+	//private MazeCell currentCell;
 
-	private MazeDirection currentDirection;
+	//private MazeDirection currentDirection;
 
     public float speed;
     public float checkDist;
@@ -23,11 +24,15 @@ public class Player : MonoBehaviour {
     Vector3 previousGood = Vector3.zero;
     RaycastHit foundHit;
 
+    public float worldWrapOffset;
+
     // Use this for initialization
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
         itemCount = PlayerPrefs.GetInt("itemCount");
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
@@ -56,6 +61,24 @@ public class Player : MonoBehaviour {
                 foundHit.transform.GetComponent<InteractParent>().Interact();
             }
         }
+
+        //World Wrap Logic
+        if (transform.position.x > worldWrapOffset)
+        {
+            transform.position = new Vector3(-worldWrapOffset, transform.position.y, transform.position.z);
+        }
+        if (transform.position.x < -worldWrapOffset)
+        {
+            transform.position = new Vector3(worldWrapOffset, transform.position.y, transform.position.z);
+        }
+        if (transform.position.z > worldWrapOffset)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, -worldWrapOffset);
+        }
+        if (transform.position.z < -worldWrapOffset)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, +worldWrapOffset);
+        }
     }
 
     void UpdateRotation()
@@ -68,15 +91,15 @@ public class Player : MonoBehaviour {
         Camera.main.transform.localRotation = Quaternion.Euler(vertical, 0, 0);
     }
 
-    public void SetLocation(MazeCell cell)
-    {
-        if (currentCell != null)
-        {
-            currentCell.OnPlayerExited();
-        }
-        currentCell = cell;
-        transform.localPosition = new Vector3(cell.transform.localPosition.x, transform.position.y, cell.transform.localPosition.z);
-        currentCell.OnPlayerEntered();
-    }
+    //public void SetLocation(MazeCell cell)
+    //{
+    //    if (currentCell != null)
+    //    {
+    //        currentCell.OnPlayerExited();
+    //    }
+    //    currentCell = cell;
+    //    transform.localPosition = new Vector3(cell.transform.localPosition.x, transform.position.y, cell.transform.localPosition.z);
+    //    currentCell.OnPlayerEntered();
+    //}
 
 }

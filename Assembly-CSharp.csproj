@@ -46,7 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\FPS_Test.cs" />
+     <Compile Include="Assets\Scripts\FPS\FPS_Test.cs" />
      <Compile Include="Assets\Scripts\FadeEffect.cs" />
      <Compile Include="Assets\Scripts\Maze\DoorTrigger.cs" />
      <Compile Include="Assets\Scripts\Maze\Enemies\EnemyFollow.cs" />
@@ -74,6 +74,10 @@
      <Compile Include="Assets\Scripts\Maze\MazeWall.cs" />
      <Compile Include="Assets\Scripts\Maze\Player.cs" />
      <Compile Include="Assets\Scripts\PlayerCharacter.cs" />
+     <Compile Include="Assets\Scripts\RPG\RPG_Inventory.cs" />
+     <Compile Include="Assets\Scripts\RPG\RPG_Quest.cs" />
+     <Compile Include="Assets\Scripts\RPG\RPG_QuestObject.cs" />
+     <Compile Include="Assets\Scripts\RPG\RPG_QuestTracker.cs" />
      <Compile Include="Assets\Scripts\SceneFader.cs" />
      <Compile Include="Assets\Test\PerlinNoise.cs" />
      <None Include="Assets\Imports\Props\Info.txt" />

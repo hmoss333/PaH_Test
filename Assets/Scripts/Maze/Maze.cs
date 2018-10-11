@@ -185,7 +185,7 @@ public class Maze : MonoBehaviour {
                 {
                     iObject = Instantiate(objectTypes[Random.Range(0, objectTypes.Length)].gameObject);
                     iObject.transform.parent = currentCell.transform;
-                    float radius = iObject.GetComponent<BoxCollider>().size.x / 2;//iObject.GetComponent<SphereCollider>().radius;
+                    float radius = iObject.GetComponent<BoxCollider>().size.x / 2; //iObject.GetComponent<SphereCollider>().radius;
                     iObject.transform.position = new Vector3(
                         Random.Range(currentCell.transform.position.x - (cellScale / 2) + radius, currentCell.transform.localPosition.x + (cellScale / 2) - radius),
                         0.5f,
